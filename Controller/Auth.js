@@ -1,5 +1,8 @@
 const  bcyrpt = require("bcrypt");
 const User = require("../Model/User");
+const jwt = require("jsonwebtoken");
+require('dotenv').config();
+
 
 exports.signup = async(req, res)=>{
     try{
@@ -51,10 +54,81 @@ exports.signup = async(req, res)=>{
 
 exports.login = async(req, res)=>{
     try{
+        //fetch the data
+        const {email, password } = req.body;
+        //validation of email and password 
+        if(!email || !password){
+            return res.status(400).json({
+                success:false,
+                message:"Please fill all the details carefully"
+            })
+        }
+        //check the registered User
+      let  user = await User.findOne({email});
+        if(!user){
+            return res.status(401).json({
+                success:false,
+                message:"User is not registered"
+
+            })
+        }
+        //creating the Payload
+        const payload ={
+            email: user.email,
+            id: user._id,
+            role: user.role,
+
+        };
+
+        const options ={
+
+            expires: new Date(Date.now() + 3*24*60*60*1000),
+            httpOnly: true,
+        }
+
+        //verify the password
+        if(await bcyrpt.compare(password, user.password)){
+            //create the JWT token
+            let token = jwt.sign(payload, process.env.JWT_SECRET,{
+                expiresIn:"7d",
+            });
+            
+
+            user.token = token;
+            await user.save(); //in order to enter into the Schema
+            //remove password 
+            user.password = undefined;
+            //create Cookies
+            res.cookie("NehaCookie", token, options ).status(200).json({
+                success:true,
+                token,
+                user,
+                message:"User Logged in successfully",
+
+            })
+            
+
+
+            
+        }
+
+        else{
+            return res.status(403).json({
+                success:false,
+                message:"password incorrect"
+
+            })
+
+        }
+
 
     }
     catch(err){
-        
+        console.log(err+"Error occured")
+        return res.status(500).json({
+            success: false,
+            message :"Login Failure"
+        })
     }
 
 }

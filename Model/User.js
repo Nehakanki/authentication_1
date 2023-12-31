@@ -19,7 +19,12 @@ const userSchmema = new mongoose.Schema({
         type :String,
         enum:["Admin","Student","Visitor"]
 
+    },
+    token:{
+        type:String,
     }
-});;
 
-module.exports =mongoose.model("user",userSchmema );
+    
+});
+
+module.exports = mongoose.model("user",userSchmema );
