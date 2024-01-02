@@ -3,6 +3,12 @@ const app = express();
 
 require('dotenv').config();
 const PORT = process.env.PORT || 4000;
+
+
+//Cookie_Parser
+
+const Cookie_Parser = require("cookie-parser");
+app.use(Cookie_Parser()); //added into app
  
 app.use(express.json());
 

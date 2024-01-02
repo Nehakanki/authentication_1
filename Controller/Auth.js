@@ -1,4 +1,5 @@
 const  bcyrpt = require("bcrypt");
+//since controller depends on controller
 const User = require("../Model/User");
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
@@ -29,7 +30,7 @@ exports.signup = async(req, res)=>{
             })
         }
 
-        //create the entry for user
+        //create the entry for user after hashing the password
         const user = await User.create({
             name, email,password :hashedPassword, role 
         })
@@ -98,8 +99,8 @@ exports.login = async(req, res)=>{
             await user.save(); //in order to enter into the Schema
             //remove password 
             user.password = undefined;
-            //create Cookies
-            res.cookie("NehaCookie", token, options ).status(200).json({
+            //create Cookies : nameOfCookie, Cookie and options
+            res.cookie("name_of_cookie", token, options ).status(200).json({
                 success:true,
                 token,
                 user,

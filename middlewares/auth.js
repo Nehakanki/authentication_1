@@ -10,7 +10,7 @@ exports.auth = (req,res,next)=>{
     try{
         //1. extract JWT token from Body
 
-        const token = req.body.token;
+        const token = req.body.token || req.cookie.token || req.header("Authorization").replace("Bearer ","");
         if(!token){
             res.status(401).json({
                 success:false,
@@ -27,7 +27,7 @@ exports.auth = (req,res,next)=>{
             console.log(payload);
 
             req.user= payload;
-            console.log(req.user);///last error here 
+            // console.log(req.user);///last error here 
         
 
         }catch(err){
