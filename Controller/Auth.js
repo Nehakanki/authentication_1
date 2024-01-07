@@ -94,7 +94,6 @@ exports.login = async(req, res)=>{
                 expiresIn:"7d",
             });
             
-
             user.token = token;
             await user.save(); //in order to enter into the Schema
             //remove password 
