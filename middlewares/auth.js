@@ -5,8 +5,7 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-//
-exports.auth = (req,res,next)=>{
+exports.auth = (req, res ,next)=>{
     try{
         //1. extract JWT token from Body
 
